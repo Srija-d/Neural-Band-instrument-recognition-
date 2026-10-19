@@ -1,0 +1,37 @@
+# Data (download with scripts/download_irmas.py, never commit)
+data/
+*.wav
+*.mp3
+*.flac
+*.zip
+
+# Model weights and checkpoints
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+checkpoints/
+runs/
+wandb/
+
+# Cached features
+*.npy
+*.npz
+cache/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
