@@ -1,0 +1,24 @@
+# Core
+numpy
+pandas
+tqdm
+matplotlib
+
+# Audio
+librosa
+soundfile
+
+# Classical ML + evaluation
+scikit-learn
+
+# Deep learning (on Colab, torch/torchaudio are preinstalled)
+torch
+torchaudio
+
+# Foundation models
+transformers        # AST and CLAP (Hugging Face)
+panns-inference     # PANNs pretrained models
+# msclap            # optional: Microsoft CLAP (Elizalde et al., 2023)
+
+# Notebooks
+jupyter
