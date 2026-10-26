@@ -22,7 +22,8 @@ The full proposal is in [`report/Project_Proposal_Neural_Band_Revised.pdf`](repo
 | `scripts/` | Data download and one-off scripts | Aisha |
 | `src/preprocessing/` | Resample, trim silence, normalize, 3 s clips | Aisha |
 | `src/splits/` | Recording-aware train/val/test split, 5–100% subsets | Aisha |
-| `src/classical/` | MFCC features + SVM / Random Forest | Aisha |
+| `src/classical/` | MFCC features + SVM / Random Forest (currently `baseline_mfcc.py` at repo root, reads `irmas_prep/`) | Aisha |
+| `baseline_results/` | Classical baseline metrics, reports, confusion matrices | Aisha |
 | `src/cnn/` | CNN on mel spectrograms + SpecAugment | Bhagyashri |
 | `src/foundation/zero_shot/` | AST, PANNs, CLAP without IRMAS training | Srija |
 | `src/foundation/finetune/` | Linear probe and fine-tuning | Bhagyashri |
@@ -99,6 +100,43 @@ Writes to `irmas_prep/` (not committed — regenerate locally or on Colab after 
 | `mfcc_feats.npy` | (6705, 40) float32 | classical SVM / Random Forest |
 
 `manifest.csv` and both `.npy` arrays are row-aligned — row *i* in `manifest.csv` is row *i* in `mels.npy` and `mfcc_feats.npy`. Verified on the full dataset: no NaN/Inf, no silent clips, row counts and order match exactly.
+
+## Classical baseline: MFCC + SVM / Random Forest (`baseline_mfcc.py`)
+
+The RQ1 reference point the CNN has to beat. For every training subset (5 / 10 / 25 / 50 / 100%) it trains SVM and Random Forest candidates and picks hyperparameters by **macro-F1 on the val split**. Test is only scored when `--eval_test` is passed — save that for the final evaluation in week 7.
+
+- **Features**: the shared `irmas_prep/mfcc_feats.npy` (40-d pooled MFCCs from `preprocess_irmas.py`), with train/val/subset membership read from `irmas_prep/manifest.csv` — the same cleaned clips and splits every other model uses.
+- **SVM**: `StandardScaler` → RBF `SVC`, `class_weight="balanced"`; grid `C ∈ {1, 10, 100}`, `gamma ∈ {scale, 0.01, 0.001}`.
+- **Random Forest**: 500 trees, `class_weight="balanced"`; grid `max_features ∈ {sqrt, 0.3}`, `min_samples_leaf ∈ {1, 2}`.
+- **Seed**: 42.
+
+```bash
+python baseline_mfcc.py --prep_dir irmas_prep               # val only (default)
+python baseline_mfcc.py --prep_dir irmas_prep --eval_test   # week 7: also score test
+```
+
+Writes to `baseline_results/`:
+
+| File | Contents |
+|---|---|
+| `results.csv` | model, subset %, n_train, best params, val macro-F1 (+ test macro-F1 with `--eval_test`) |
+| `report_svm.txt`, `report_rf.txt` | per-class precision / recall / F1 on val (on test with `--eval_test`), 100% subset |
+| `confusion_svm.png`, `confusion_rf.png` | row-normalized confusion matrices for the same split, 100% subset |
+
+### Results (val macro-F1)
+
+| Train subset | n_train | SVM | Random Forest |
+|---|---|---|---|
+| 5% | 236 | 0.297 | 0.297 |
+| 10% | 474 | 0.324 | 0.326 |
+| 25% | 1174 | 0.394 | 0.380 |
+| 50% | 2358 | 0.441 | 0.404 |
+| 100% | 4702 | **0.494** | 0.444 |
+
+Takeaways:
+- **SVM is the stronger baseline** once there is enough data. The two models are tied at 5–10%, but on full data SVM reaches 0.494 macro-F1 (50.2% accuracy) vs. 0.444 (46.1%) for RF. For RQ1, the CNN needs **≥ 0.544 val macro-F1** to clear the 5-point bar.
+- Performance is still climbing at 100% (+5.3 points from 50% → 100% for SVM), so the classical models are data-limited rather than saturated.
+- Easiest classes (SVM, full data): voice (F1 0.71), piano (0.57), acoustic guitar (0.56). Hardest: clarinet (0.38), saxophone (0.40) and flute (0.42). See `confusion_svm.png`.
 
 ## Team workflow
 
