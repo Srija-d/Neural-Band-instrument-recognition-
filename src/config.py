@@ -32,6 +32,7 @@ N_MFCC = 20
 
 # Experiment settings
 SEEDS = [0, 1, 2]                                   # 3 runs per model
+SPLIT_SEED = 42                                     # fixed so every teammate gets identical splits
 DATA_FRACTIONS = [0.05, 0.10, 0.25, 0.50, 1.00]     # data-scarcity study
 VAL_SIZE = 0.15
 TEST_SIZE = 0.15

@@ -9,8 +9,8 @@ Usage:
 import pandas as pd
 from sklearn.model_selection import GroupShuffleSplit
 
-from src.config import (DATA_FRACTIONS, IRMAS_TRAIN_DIR, SPLITS_DIR, TEST_SIZE,
-                        VAL_SIZE)
+from src.config import (DATA_FRACTIONS, IRMAS_TRAIN_DIR, SPLIT_SEED, SPLITS_DIR,
+                        TEST_SIZE, VAL_SIZE)
 
 
 def recording_id(filename):
@@ -35,7 +35,7 @@ def build_index():
     return pd.DataFrame(rows)
 
 
-def split(df, seed=0):
+def split(df, seed=SPLIT_SEED):
     gss = GroupShuffleSplit(n_splits=1, test_size=TEST_SIZE, random_state=seed)
     trainval_idx, test_idx = next(gss.split(df, groups=df["group"]))
     trainval, test = df.iloc[trainval_idx], df.iloc[test_idx]
@@ -44,7 +44,7 @@ def split(df, seed=0):
     return trainval.iloc[train_idx], trainval.iloc[val_idx], test
 
 
-def scarce_subsets(train, seed=0):
+def scarce_subsets(train, seed=SPLIT_SEED):
     """Class-balanced fractions of the training set, chosen by whole recordings."""
     out = {}
     for frac in DATA_FRACTIONS:

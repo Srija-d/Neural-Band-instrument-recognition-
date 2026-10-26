@@ -43,9 +43,62 @@ python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python scripts/download_irmas.py # downloads IRMAS training data into data/
+python -m src.splits.make_splits # builds results/splits/*.csv (committed, so skip if already present)
+python preprocess_irmas.py       # builds irmas_prep/ (local only, not committed — see below)
 ```
 
 On Google Colab: clone the repo in a cell, run `pip install -r requirements.txt`, and keep `data/` on Google Drive so you don't re-download it every session.
+
+## Data splits and preprocessing
+
+Everyone trains and evaluates on the **same** split files and the **same** cleaned features, so results are comparable across the CNN, foundation models, and the classical baseline.
+
+### 1. Recording-aware train/val/test split (`src/splits/make_splits.py`)
+
+IRMAS cuts several 3 s clips out of each source recording. If clips from the same recording end up in both train and test, a model can "cheat" by recognizing the recording instead of the instrument — so every clip from one recording must stay in a single split.
+
+- **Recording ID**: the filename up to the final `__N` (e.g. `[cel][cla]0001__1.wav` → `[cel][cla]0001`). IRMAS actually ships two filename shapes — `[inst][genre]NNNN__N.wav` and `NNN__[inst][drums][genre]NNNN__N.wav` (with an extra leading counter) — but that leading counter is unique within each instrument folder, so this rule still groups every clip correctly; we verified this against all 6705 files in the real dataset.
+- **Split**: `GroupShuffleSplit` on those recording groups, stratified by nothing but kept class-complete — 70% train / 15% val / 15% test by recording.
+- **Data-scarcity subsets**: for the "how much data do we actually need?" experiments, `train.csv` is cut down to class-balanced 5% / 10% / 25% / 50% / 100% subsets, chosen by whole recordings so each smaller subset is **nested inside** every larger one (5% ⊂ 10% ⊂ 25% ⊂ 50% ⊂ 100%).
+- **Seed**: fixed at `SPLIT_SEED = 42` in `src/config.py`. Don't change it — re-running the script with seed 42 reproduces byte-identical CSVs for everyone.
+
+Run once (outputs are already committed, so you normally don't need to):
+
+```bash
+python -m src.splits.make_splits
+```
+
+Writes to `results/splits/`:
+
+| File | Rows | Columns |
+|---|---|---|
+| `train.csv` | 4702 | `path, label, group` |
+| `val.csv` | 1004 | `path, label, group` |
+| `test.csv` | 999 | `path, label, group` |
+| `train_005pct.csv` … `train_100pct.csv` | 236 … 4702 | `path, label, group` |
+
+Verified: no recording appears in more than one split; all 11 instruments appear in train, val, and test; subsets are properly nested.
+
+### 2. Feature extraction (`preprocess_irmas.py`)
+
+Reads the split CSVs above (so the manifest can never disagree with them), cleans every clip the same way regardless of which model will use it — resample to 22.05 kHz, trim silence, peak-normalize, pad/crop to exactly 3 s (`src/preprocessing/audio.py`) — and extracts:
+
+- **log-mel spectrograms**, for the CNN and as a base for the foundation models
+- **pooled MFCCs** (mean + std of 20 coefficients over time → 40-d vector), for the classical SVM / Random Forest baseline
+
+```bash
+python preprocess_irmas.py --out-dir irmas_prep
+```
+
+Writes to `irmas_prep/` (not committed — regenerate locally or on Colab after pulling `results/splits/`):
+
+| File | Shape | Used by |
+|---|---|---|
+| `manifest.csv` | (6705, 9) — `path, label, recording_id, split, pct_005…pct_100` | everyone, to look up which split/subset a feature row belongs to |
+| `mels.npy` | (6705, 128, 130) float32 | CNN, foundation-model baselines |
+| `mfcc_feats.npy` | (6705, 40) float32 | classical SVM / Random Forest |
+
+`manifest.csv` and both `.npy` arrays are row-aligned — row *i* in `manifest.csv` is row *i* in `mels.npy` and `mfcc_feats.npy`. Verified on the full dataset: no NaN/Inf, no silent clips, row counts and order match exactly.
 
 ## Team workflow
 
@@ -57,7 +110,7 @@ On Google Colab: clone the repo in a cell, run `pip install -r requirements.txt`
 
 Rules:
 - Never push audio files, model weights (`*.pt`, `*.pth`, `*.ckpt`) or large outputs. GitHub rejects files over 100 MB.
-- Use the **same split files** for every model, so results are comparable.
+- Use the **same split files and preprocessed features** for every model — see [Data splits and preprocessing](#data-splits-and-preprocessing). Don't regenerate `results/splits/` with a different seed.
 - Touch the test set only once, at the end (week 7).
 - Track tasks on the GitHub **Projects** board (one card per week, assigned to its owner).
 

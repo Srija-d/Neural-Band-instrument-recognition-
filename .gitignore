@@ -19,6 +19,7 @@ wandb/
 *.npy
 *.npz
 cache/
+irmas_prep/
 
 # Python
 __pycache__/
