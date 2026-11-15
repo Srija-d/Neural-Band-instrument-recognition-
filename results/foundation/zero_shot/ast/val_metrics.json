@@ -1,0 +1,6 @@
+{
+  "model": "foundation/zero_shot/ast",
+  "run": "val",
+  "macro_f1": 0.6501910226824511,
+  "accuracy": 0.6772908366533864
+}

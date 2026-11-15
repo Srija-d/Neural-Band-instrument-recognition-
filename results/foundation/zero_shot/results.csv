@@ -1,0 +1,4 @@
+model,run,prompt,n_train,val_macro_f1,val_acc
+ast,zero_shot,,0,0.6502,0.6773
+panns,zero_shot,,0,0.5119,0.495
+clap,zero_shot,a {} solo,0,0.5193,0.5359

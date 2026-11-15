@@ -1,0 +1,8 @@
+,val_macro_f1,val_macro_f1,val_macro_f1
+,mean,std,count
+subset_pct,,,
+5,0.6757,,1
+10,0.7208,,1
+25,0.7669,,1
+50,0.7854,,1
+100,0.8034,,1

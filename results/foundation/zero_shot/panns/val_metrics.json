@@ -1,0 +1,6 @@
+{
+  "model": "foundation/zero_shot/panns",
+  "run": "val",
+  "macro_f1": 0.511925275769143,
+  "accuracy": 0.4950199203187251
+}
