@@ -1,0 +1,6 @@
+{
+  "model": "foundation/zero_shot/clap",
+  "run": "val",
+  "macro_f1": 0.5192633957509314,
+  "accuracy": 0.5358565737051793
+}
