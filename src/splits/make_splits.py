@@ -7,10 +7,10 @@ Usage:
     python -m src.splits.make_splits
 """
 import pandas as pd
-from sklearn.model_selection import GroupShuffleSplit
+from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
-from src.config import (DATA_FRACTIONS, IRMAS_TRAIN_DIR, SPLIT_SEED, SPLITS_DIR,
-                        TEST_SIZE, VAL_SIZE)
+from src.config import (DATA_FRACTIONS, IRMAS_TRAIN_DIR, RANDOM_SPLITS_DIR, SPLIT_SEED,
+                        SPLITS_DIR, TEST_SIZE, VAL_SIZE)
 
 
 def recording_id(filename):
@@ -44,6 +44,20 @@ def split(df, seed=SPLIT_SEED):
     return trainval.iloc[train_idx], trainval.iloc[val_idx], test
 
 
+def random_split(df, seed=SPLIT_SEED):
+    """Clip-level split that ignores recordings, for the split ablation ONLY.
+
+    Same 70/15/15 sizes, stratified by instrument, but clips from one recording
+    can land in train and test. This is the leaky setup the recording-aware split
+    protects against; never use it for headline results.
+    """
+    trainval, test = train_test_split(df, test_size=TEST_SIZE, stratify=df["label"],
+                                      random_state=seed)
+    train, val = train_test_split(trainval, test_size=VAL_SIZE / (1 - TEST_SIZE),
+                                  stratify=trainval["label"], random_state=seed)
+    return train, val, test
+
+
 def scarce_subsets(train, seed=SPLIT_SEED):
     """Class-balanced fractions of the training set, chosen by whole recordings."""
     out = {}
@@ -67,6 +81,15 @@ def main():
         sub.to_csv(SPLITS_DIR / f"train_{int(frac * 100):03d}pct.csv", index=False)
     assert not set(train["group"]) & set(test["group"]), "Leak: recording in train and test"
     assert not set(val["group"]) & set(test["group"]), "Leak: recording in val and test"
+
+    # Split ablation: same clips split at random, written to their own folder.
+    RANDOM_SPLITS_DIR.mkdir(parents=True, exist_ok=True)
+    r_train, r_val, r_test = random_split(df)
+    for name, part in [("train", r_train), ("val", r_val), ("test", r_test)]:
+        part.to_csv(RANDOM_SPLITS_DIR / f"{name}.csv", index=False)
+    leaked = r_test["group"].isin(set(r_train["group"]))
+    print(f"random split: {len(r_train)}/{len(r_val)}/{len(r_test)} clips, "
+          f"{leaked.sum()} test clips ({leaked.mean():.0%}) share a recording with train")
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 IRMAS_TRAIN_DIR = DATA_DIR / "IRMAS-TrainingData"
 SPLITS_DIR = ROOT / "results" / "splits"
+RANDOM_SPLITS_DIR = SPLITS_DIR / "random"           # split ablation only, leaks recordings
 RESULTS_DIR = ROOT / "results"
 
 # IRMAS instrument codes (folder names) -> readable names

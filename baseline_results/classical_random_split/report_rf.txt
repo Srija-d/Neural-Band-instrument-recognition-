@@ -1,0 +1,19 @@
+CLASSICAL (random split) + RF, 100% train, evaluated on val
+
+              precision    recall  f1-score   support
+
+         cel      0.476     0.672     0.557        58
+         cla      0.620     0.579     0.599        76
+         flu      0.784     0.588     0.672        68
+         gac      0.542     0.674     0.601        95
+         gel      0.488     0.553     0.519       114
+         org      0.507     0.667     0.576       102
+         pia      0.680     0.630     0.654       108
+         sax      0.732     0.319     0.444        94
+         tru      0.790     0.563     0.658        87
+         vio      0.440     0.425     0.433        87
+         voi      0.627     0.718     0.669       117
+
+    accuracy                          0.583      1006
+   macro avg      0.608     0.581     0.580      1006
+weighted avg      0.606     0.583     0.581      1006
