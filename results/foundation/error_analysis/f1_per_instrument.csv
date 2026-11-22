@@ -1,0 +1,12 @@
+,CLAP fine-tuned,AST probe,CNN,n clips
+clarinet,0.736,0.734,0.685,77
+saxophone,0.742,0.722,0.645,105
+electric guitar,0.763,0.726,0.69,103
+flute,0.78,0.81,0.73,76
+cello,0.793,0.667,0.686,57
+violin,0.794,0.758,0.757,97
+acoustic guitar,0.804,0.804,0.784,107
+trumpet,0.817,0.867,0.778,102
+piano,0.83,0.869,0.847,87
+organ,0.895,0.905,0.812,85
+voice,0.964,0.977,0.924,108
