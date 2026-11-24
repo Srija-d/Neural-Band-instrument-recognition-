@@ -1,0 +1,12 @@
+model,vs,difference_points,ci_low_points,ci_high_points,clears_5_point_bar,share_of_samples_where_worse
+SVM,CNN,-28.0,-31.2,-24.5,False,1.0
+Random Forest,CNN,-29.8,-33.0,-26.3,False,1.0
+AST zero-shot,CNN,-8.9,-11.8,-5.8,False,1.0
+PANNs zero-shot,CNN,-6.8,-10.0,-3.9,False,1.0
+CLAP zero-shot,CNN,-21.0,-24.5,-17.5,False,1.0
+AST probe,CNN,5.9,3.4,8.5,False,0.0
+PANNs probe,CNN,1.9,-0.8,4.6,False,0.078
+CLAP probe,CNN,-2.4,-4.9,0.3,False,0.956
+AST fine-tuned,CNN,4.5,2.3,6.9,False,0.0
+PANNs fine-tuned,CNN,6.8,4.8,9.2,False,0.0
+CLAP fine-tuned,CNN,6.5,4.3,8.8,False,0.0

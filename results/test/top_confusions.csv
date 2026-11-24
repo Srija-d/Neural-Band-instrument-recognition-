@@ -1,0 +1,66 @@
+model,true,predicted,share_of_true_class
+AST fine-tuned,sax,tru,0.168
+AST fine-tuned,vio,cel,0.142
+AST fine-tuned,sax,cla,0.123
+AST fine-tuned,cel,vio,0.119
+AST fine-tuned,cla,sax,0.117
+AST probe,sax,tru,0.153
+AST probe,vio,cel,0.125
+AST probe,cla,sax,0.122
+AST probe,cel,vio,0.113
+AST probe,cel,gel,0.094
+AST zero-shot,cel,vio,0.509
+AST zero-shot,sax,vio,0.324
+AST zero-shot,cla,vio,0.284
+AST zero-shot,cla,sax,0.243
+AST zero-shot,org,pia,0.206
+CLAP fine-tuned,cel,vio,0.151
+CLAP fine-tuned,cla,sax,0.135
+CLAP fine-tuned,tru,sax,0.123
+CLAP fine-tuned,sax,cla,0.108
+CLAP fine-tuned,org,gel,0.103
+CLAP probe,cel,vio,0.226
+CLAP probe,tru,sax,0.2
+CLAP probe,sax,cla,0.153
+CLAP probe,cla,sax,0.149
+CLAP probe,org,gel,0.112
+CLAP zero-shot,gel,gac,0.451
+CLAP zero-shot,voi,gac,0.374
+CLAP zero-shot,cla,sax,0.351
+CLAP zero-shot,pia,org,0.262
+CLAP zero-shot,tru,sax,0.231
+CNN,cel,vio,0.201
+CNN,cla,sax,0.162
+CNN,sax,tru,0.126
+CNN,sax,vio,0.117
+CNN,org,gel,0.084
+Majority class,cel,voi,1.0
+Majority class,cla,voi,1.0
+Majority class,flu,voi,1.0
+Majority class,gac,voi,1.0
+Majority class,gel,voi,1.0
+PANNs fine-tuned,vio,cel,0.142
+PANNs fine-tuned,flu,vio,0.13
+PANNs fine-tuned,cla,sax,0.122
+PANNs fine-tuned,sax,tru,0.108
+PANNs fine-tuned,cel,vio,0.069
+PANNs probe,cel,vio,0.189
+PANNs probe,sax,tru,0.153
+PANNs probe,vio,cel,0.15
+PANNs probe,flu,vio,0.13
+PANNs probe,cla,sax,0.122
+PANNs zero-shot,cel,vio,0.509
+PANNs zero-shot,cla,sax,0.23
+PANNs zero-shot,org,gel,0.224
+PANNs zero-shot,sax,vio,0.198
+PANNs zero-shot,gel,gac,0.176
+Random Forest,org,gel,0.252
+Random Forest,gel,voi,0.245
+Random Forest,tru,org,0.215
+Random Forest,org,voi,0.196
+Random Forest,flu,vio,0.159
+SVM,cel,vio,0.17
+SVM,sax,gel,0.162
+SVM,tru,sax,0.154
+SVM,org,gel,0.14
+SVM,tru,cla,0.138
