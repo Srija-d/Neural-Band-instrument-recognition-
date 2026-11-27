@@ -14,11 +14,11 @@ AST zero-shot,sax,vio,0.324
 AST zero-shot,cla,vio,0.284
 AST zero-shot,cla,sax,0.243
 AST zero-shot,org,pia,0.206
-CLAP fine-tuned,cel,vio,0.151
-CLAP fine-tuned,cla,sax,0.135
-CLAP fine-tuned,tru,sax,0.123
-CLAP fine-tuned,sax,cla,0.108
-CLAP fine-tuned,org,gel,0.103
+CLAP fine-tuned,tru,sax,0.128
+CLAP fine-tuned,sax,cla,0.126
+CLAP fine-tuned,cel,vio,0.113
+CLAP fine-tuned,cla,sax,0.113
+CLAP fine-tuned,vio,cel,0.104
 CLAP probe,cel,vio,0.226
 CLAP probe,tru,sax,0.2
 CLAP probe,sax,cla,0.153

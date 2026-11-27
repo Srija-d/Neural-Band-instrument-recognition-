@@ -16,7 +16,7 @@
 | CLAP probe | 1 | 0.732 | 0.700–0.760 | 0.745 |
 | AST fine-tuned | 3 | 0.802 ± 0.016 | 0.778–0.823 | 0.812 |
 | PANNs fine-tuned | 3 | 0.825 ± 0.010 | 0.800–0.846 | 0.834 |
-| CLAP fine-tuned | 1 | 0.821 | 0.795–0.844 | 0.828 |
+| CLAP fine-tuned | 3 | 0.822 ± 0.004 | 0.799–0.843 | 0.828 |
 
 ## Differences vs. CNN (macro-F1 points)
 
@@ -32,6 +32,6 @@
 | CLAP probe | -2.4 | -4.9 to +0.3 | no |
 | AST fine-tuned | +4.5 | +2.3 to +6.9 | no |
 | PANNs fine-tuned | +6.8 | +4.8 to +9.2 | no |
-| CLAP fine-tuned | +6.5 | +4.3 to +8.8 | no |
+| CLAP fine-tuned | +6.5 | +4.6 to +8.6 | no |
 
 44 test clips are wrong for every model (hard_clips.csv).
